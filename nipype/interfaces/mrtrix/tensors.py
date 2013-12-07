@@ -298,17 +298,17 @@ class FSL2MRTrix(BaseInterface):
 
 class GenerateDirectionsInputSpec(CommandLineInputSpec):
     num_dirs = traits.Int(mandatory=True, argstr='%s', position=-2 , desc='the number of directions to generate.')
-
     power = traits.Float(argstr='-power %s', desc='specify exponent to use for repulsion power law.')
     niter = traits.Int(argstr='-niter %s', desc='specify the maximum number of iterations to perform.')
     display_info = traits.Bool(argstr='-info', desc='Display information messages.')
     quiet_display = traits.Bool(argstr='-quiet', desc='do not display information messages or progress status.')
     display_debug = traits.Bool(argstr='-debug', desc='Display debugging messages.')
-    out_file = File("directions.txt", argstr='%s', hash_files=False,
-                     position= -1, desc='the text file to write the directions to, as [ az el ] pairs.', usedefault=True)
+#     out_file = File("directions.txt", output_name="out_file", argstr='%s', hash_files=False,
+#                     position= -1, desc='the text file to write the directions to, as [ az el ] pairs.', usedefault=True)
+    out_file = File(genfile=True, argstr='%s', position= -1, desc='output file')
 
 class GenerateDirectionsOutputSpec(TraitedSpec):
-    out_file = File(exists=True, desc='directions file')
+    out_file = File(exists=True, desc='directions file' )
 
 class GenerateDirections(CommandLine):
     """
@@ -326,6 +326,23 @@ class GenerateDirections(CommandLine):
     _cmd = 'gendir'
     input_spec=GenerateDirectionsInputSpec
     output_spec=GenerateDirectionsOutputSpec
+    
+    def _list_outputs(self):
+        outputs = self.output_spec().get()
+        outputs['out_file'] = self.inputs.out_file
+        if not isdefined(outputs['out_file']):
+            outputs['out_file'] = op.abspath(self._gen_outfilename())
+        else:
+            outputs['out_file'] = op.abspath(outputs['out_file'])
+        return outputs
+
+    def _gen_filename(self, name):
+        if name is 'out_file':
+            return self._gen_outfilename()
+        else:
+            return None
+    def _gen_outfilename(self):
+        return 'directions_%d.txt' % self.inputs.num_dirs
 
     
 class FindShPeaksInputSpec(CommandLineInputSpec):
