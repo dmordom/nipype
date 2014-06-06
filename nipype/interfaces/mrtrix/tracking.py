@@ -81,13 +81,13 @@ class StreamlineTrackInputSpec(CommandLineInputSpec):
         argstr='-seed %s', minlen=4, maxlen=4, sep=',', units='mm')
     include_file = File(exists=True, argstr='-include %s', position=2, desc='inclusion file')
     include_spec = traits.List(traits.Float, desc='inclusion specification in mm and radius (x y z r)', position=2,
-        argstr='-seed %s', minlen=4, maxlen=4, sep=',', units='mm')
+        argstr='-include %s', minlen=4, maxlen=4, sep=',', units='mm')
     exclude_file = File(exists=True, argstr='-exclude %s', position=2, desc='exclusion file')
     exclude_spec = traits.List(traits.Float, desc='exclusion specification in mm and radius (x y z r)', position=2,
-        argstr='-seed %s', minlen=4, maxlen=4, sep=',', units='mm')
-    mask_file = File(exists=True, argstr='-exclude %s', position=2, desc='mask file. Only tracks within mask.')
-    mask_spec = traits.List(traits.Float, desc='Mask specification in mm and radius (x y z r). Tracks will be terminated when they leave the ROI.', position=2,
-        argstr='-seed %s', minlen=4, maxlen=4, sep=',', units='mm')
+        argstr='-exclude %s', minlen=4, maxlen=4, sep=',', units='mm')
+    mask_file = File(exists=True, argstr='-mask %s', desc='mask file. Only tracks within mask.')
+    mask_spec = traits.List(traits.Float, desc='Mask specification in mm and radius (x y z r). Tracks will be terminated when they leave the ROI.', 
+        argstr='-mask %s', minlen=4, maxlen=4, sep=',', units='mm')
 
     inputmodel = traits.Enum('DT_STREAM', 'SD_PROB', 'SD_STREAM',
         argstr='%s', desc='input model type', usedefault=True, position=-3)
